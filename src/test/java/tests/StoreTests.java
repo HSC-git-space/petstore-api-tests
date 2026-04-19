@@ -12,6 +12,8 @@ import static io.restassured.RestAssured.given;
 
 public class StoreTests {
 
+    private long createdOrderId;
+
     @BeforeClass
     public void setup() {
         RestAssured.requestSpecification = SpecBuilder.getRequestSpec();
@@ -29,24 +31,30 @@ public class StoreTests {
     @Test(description = "Place a new order")
     public void placeOrder() {
         Order order = new Order();
-        order.setId(1);
+        order.setId(0);
         order.setPetId(1);
         order.setQuantity(1);
         order.setStatus("placed");
         order.setComplete(true);
 
-        given()
+        Order created = given()
                 .body(order)
                 .when()
                 .post(Endpoints.ORDER_PLACE)
                 .then()
-                .statusCode(200);
+                .statusCode(200)
+                .extract()
+                .as(Order.class);
+
+        createdOrderId = created.getId();
+        Assert.assertTrue(createdOrderId > 0);
     }
 
-    @Test(description = "Get order by ID")
+    @Test(description = "Get order by ID",
+            dependsOnMethods = "placeOrder")
     public void getOrderById() {
         Order order = given()
-                .pathParam("orderId", 1)
+                .pathParam("orderId", createdOrderId)
                 .when()
                 .get(Endpoints.ORDER_BY_ID)
                 .then()
@@ -54,6 +62,6 @@ public class StoreTests {
                 .extract()
                 .as(Order.class);
 
-        Assert.assertNotNull(order.getId());
+        Assert.assertEquals(order.getId(), createdOrderId);
     }
 }
