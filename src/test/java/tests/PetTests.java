@@ -35,6 +35,7 @@ public class PetTests {
                 .extract()
                 .as(Pet.class);
 
+        System.out.println("Created pet ID: " + created.getId());
         createdPetId = created.getId();
         Assert.assertTrue(createdPetId > 0);
     }
