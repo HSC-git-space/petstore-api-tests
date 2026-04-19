@@ -12,15 +12,38 @@ import static io.restassured.RestAssured.given;
 
 public class PetTests {
 
+    private long createdPetId;
+
     @BeforeClass
     public void setup() {
         RestAssured.requestSpecification = SpecBuilder.getRequestSpec();
     }
 
-    @Test(description = "Get pet by valid ID")
+    @Test(description = "Add a new pet")
+    public void addNewPet() {
+        Pet pet = new Pet();
+        pet.setId(0);
+        pet.setName("TestDog");
+        pet.setStatus("available");
+
+        Pet created = given()
+                .body(pet)
+                .when()
+                .post(Endpoints.PET_ADD)
+                .then()
+                .statusCode(200)
+                .extract()
+                .as(Pet.class);
+
+        createdPetId = created.getId();
+        Assert.assertTrue(createdPetId > 0);
+    }
+
+    @Test(description = "Get pet by valid ID",
+            dependsOnMethods = "addNewPet")
     public void getPetById() {
         Pet pet = given()
-                .pathParam("petId", 1)
+                .pathParam("petId", createdPetId)
                 .when()
                 .get(Endpoints.PET_BY_ID)
                 .then()
@@ -41,25 +64,11 @@ public class PetTests {
                 .statusCode(200);
     }
 
-    @Test(description = "Add a new pet")
-    public void addNewPet() {
-        Pet pet = new Pet();
-        pet.setId(99999);
-        pet.setName("TestDog");
-        pet.setStatus("available");
-
-        given()
-                .body(pet)
-                .when()
-                .post(Endpoints.PET_ADD)
-                .then()
-                .statusCode(200);
-    }
-
-    @Test(description = "Delete a pet")
+    @Test(description = "Delete a pet",
+            dependsOnMethods = "addNewPet")
     public void deletePet() {
         given()
-                .pathParam("petId", 99999)
+                .pathParam("petId", createdPetId)
                 .when()
                 .delete(Endpoints.PET_DELETE)
                 .then()
