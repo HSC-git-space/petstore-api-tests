@@ -1,4 +1,4 @@
-package utils;
+package utilities;
 
 import config.ConfigReader;
 import io.restassured.builder.RequestSpecBuilder;

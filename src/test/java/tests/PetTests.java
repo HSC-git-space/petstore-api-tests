@@ -1,16 +1,17 @@
 package tests;
 
+import base.BaseTest;
 import constants.Endpoints;
 import io.restassured.RestAssured;
 import models.Pet;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import utils.SpecBuilder;
+import utilities.SpecBuilder;
 
 import static io.restassured.RestAssured.given;
 
-public class PetTests {
+public class PetTests extends BaseTest {
 
     private long createdPetId;
 
@@ -35,7 +36,6 @@ public class PetTests {
                 .extract()
                 .as(Pet.class);
 
-        System.out.println("Created pet ID: " + created.getId());
         createdPetId = created.getId();
         Assert.assertTrue(createdPetId > 0);
     }

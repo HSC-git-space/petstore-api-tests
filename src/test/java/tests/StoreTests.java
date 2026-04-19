@@ -1,16 +1,17 @@
 package tests;
 
+import base.BaseTest;
 import constants.Endpoints;
 import io.restassured.RestAssured;
 import models.Order;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import utils.SpecBuilder;
+import utilities.SpecBuilder;
 
 import static io.restassured.RestAssured.given;
 
-public class StoreTests {
+public class StoreTests extends BaseTest {
 
     private long createdOrderId;
 
