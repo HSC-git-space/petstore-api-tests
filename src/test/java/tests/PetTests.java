@@ -1,5 +1,6 @@
 package tests;
 
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import base.BaseTest;
 import constants.Endpoints;
 import io.restassured.RestAssured;
@@ -84,5 +85,15 @@ public class PetTests extends BaseTest {
                 .get(Endpoints.PET_BY_ID)
                 .then()
                 .statusCode(404);
+    }
+    @Test(description = "Validate pet response schema")
+    public void validatePetSchema() {
+        given()
+                .queryParam("status", "available")
+                .when()
+                .get(Endpoints.PET_BY_STATUS)
+                .then()
+                .statusCode(200)
+                .body(matchesJsonSchemaInClasspath("schemas/pet-schema.json"));
     }
 }
