@@ -61,4 +61,13 @@ public class UserTests extends BaseTest {
                 .then()
                 .statusCode(200);
     }
+    @Test(description = "Get user that does not exist - negative test")
+    public void getUserThatDoesNotExist() {
+        given()
+                .pathParam("username", "thisuserdoesnotexist12345")
+                .when()
+                .get(Endpoints.USER_BY_NAME)
+                .then()
+                .statusCode(404);
+    }
 }
