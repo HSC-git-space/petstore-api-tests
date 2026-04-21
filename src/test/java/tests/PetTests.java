@@ -75,4 +75,14 @@ public class PetTests extends BaseTest {
                 .then()
                 .statusCode(200);
     }
+
+    @Test(description = "Get pet with invalid ID - negative test")
+    public void getPetByInvalidId() {
+        given()
+                .pathParam("petId", 999999999)
+                .when()
+                .get(Endpoints.PET_BY_ID)
+                .then()
+                .statusCode(404);
+    }
 }
