@@ -1,5 +1,8 @@
 package tests;
 
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchema;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchema;
+import java.io.File;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import base.BaseTest;
 import constants.Endpoints;
@@ -94,6 +97,6 @@ public class PetTests extends BaseTest {
                 .get(Endpoints.PET_BY_STATUS)
                 .then()
                 .statusCode(200)
-                .body(matchesJsonSchemaInClasspath("schemas/pet-schema.json"));
+                .body(matchesJsonSchema(new File("src/test/resources/pet-schema.json")));
     }
 }
