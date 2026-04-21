@@ -65,4 +65,13 @@ public class StoreTests extends BaseTest {
 
         Assert.assertEquals(order.getId(), createdOrderId);
     }
+    @Test(description = "Get order with invalid ID - negative test")
+    public void getOrderByInvalidId() {
+        given()
+                .pathParam("orderId", 999999999)
+                .when()
+                .get(Endpoints.ORDER_BY_ID)
+                .then()
+                .statusCode(404);
+    }
 }
