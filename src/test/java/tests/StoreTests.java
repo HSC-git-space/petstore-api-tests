@@ -1,5 +1,6 @@
 package tests;
 
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import base.BaseTest;
 import constants.Endpoints;
 import io.restassured.RestAssured;
@@ -73,5 +74,16 @@ public class StoreTests extends BaseTest {
                 .get(Endpoints.ORDER_BY_ID)
                 .then()
                 .statusCode(404);
+    }
+    @Test(description = "Validate order response schema",
+            dependsOnMethods = "placeOrder")
+    public void validateOrderSchema() {
+        given()
+                .pathParam("orderId", createdOrderId)
+                .when()
+                .get(Endpoints.ORDER_BY_ID)
+                .then()
+                .statusCode(200)
+                .body(matchesJsonSchemaInClasspath("schemas/order-schema.json"));
     }
 }

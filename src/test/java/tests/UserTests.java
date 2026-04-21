@@ -1,5 +1,6 @@
 package tests;
 
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import base.BaseTest;
 import constants.Endpoints;
 import io.restassured.RestAssured;
@@ -69,5 +70,16 @@ public class UserTests extends BaseTest {
                 .get(Endpoints.USER_BY_NAME)
                 .then()
                 .statusCode(404);
+    }
+    @Test(description = "Validate user response schema",
+            dependsOnMethods = "createUser")
+    public void validateUserSchema() {
+        given()
+                .pathParam("username", "testuser")
+                .when()
+                .get(Endpoints.USER_BY_NAME)
+                .then()
+                .statusCode(200)
+                .body(matchesJsonSchemaInClasspath("schemas/user-schema.json"));
     }
 }
